@@ -8,7 +8,7 @@ class User{
         return account === this.account && password === this.password;
     }
     withdraw(amount){
-        if(this.auth() && amount < this.balance && (amount%10) === 0){
+        if(this.auth(account, password) && amount < this.balance && (amount%10) === 0){
             balance -= amount
             return true;
         }else{
@@ -16,14 +16,14 @@ class User{
         }
     }
     checkBalance(){
-        if(this.auth()){
+        if(this.auth(account, password)){
             return this.balance;
         }else{
             return false;
         }
     }
     consign(amount){
-        if(this.auth()){
+        if(this.auth(account, password)){
             this.balance += amount;
             return true;
         }else{
