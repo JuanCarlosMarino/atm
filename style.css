@@ -1,0 +1,108 @@
+*{
+    margin: 50;
+    padding: 20;
+}
+body{
+    background-image: url(Images/BG.jpg);
+    background-size: cover;
+    background-position: center;
+    font-family: sans-serif;
+}
+.backgroundACC{
+    background-image: url(Images/BG-ACCOUNT.jpg);
+    background-size: cover;
+    background-position: center;
+    font-family: sans-serif;
+}
+.form-box {
+    width: 500px;
+    background-color: rgba(0, 0, 0, 0.8);
+    margin: 12% auto;
+    padding: 50px 0;
+    color: #fff;
+    box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.4);
+}
+.acc-box1 {
+    float: left;
+    width: 250px;    
+    height: 340px;
+    background-color: rgba(0, 0, 0, 0.8);
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-right: 150px;
+    margin-left: 80px;
+    padding: 25px;
+    color: #fff;
+    box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.4);
+}
+.acc-box2 {
+    float: left;
+    text-align: center;
+    width: 350px;    
+    height: 270px;
+    background-color: rgba(0, 0, 0, 0.8);
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-right: 150px;
+    margin-left: 5px;
+    padding: 60px;
+    color: #fff;
+    box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.4);
+}
+h1{
+    text-align: center;
+    margin-bottom: 40px;    
+}
+.input-box{
+    margin: 31px auto;
+    width: 80%;
+    border-bottom: 1px solid #fff;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+.input-box input{
+    width: 90%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+}
+.input-box-acc{
+    margin: 20px auto;
+    width: 80%;
+    border-bottom: 1px solid #fff;
+    padding-top: 5 px;
+    padding-bottom: 5px;
+}
+.input-box-acc input{
+    width: 80%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+}
+
+::placeholder{
+    color: #ccc;
+}
+.fa{
+    margin-right: 10px;
+}
+.eye{
+    position: absolute;
+}
+#hide1{
+    display: none;
+}
+.login-btn{
+    margin: 40px auto 20px;
+    width: 80%;
+    display: block;
+    outline: none;
+    padding: 10px 0 ;
+    border: 1px solid #fff;
+    cursor: pointer;
+    background: transparent;
+    color: white;
+    font-size: 20px;
+}
