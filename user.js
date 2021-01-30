@@ -1,6 +1,6 @@
 class User{
-    constructor(account, password, balance){
-        this.account = 042635212;
+    constructor(){
+        this.account = 42635212;
         this.password = 123456;
         this.balance = 50000;
     }
@@ -31,3 +31,5 @@ class User{
         }
     }
 }
+
+module.exports = User;

@@ -32,7 +32,8 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit('chat message', input.value);
+          //socket.emit('chat message', input.value);
+          socket.emit('chat message', {account:42635212, password:123456, balance:50000});
           input.value = '';
         }
       });
