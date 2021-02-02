@@ -1,13 +1,15 @@
 class User{
     constructor(){
-        this.account = 42635212;
-        this.password = 123456;
+        this.account = "567890123456";
+        this.password = "8520";
         this.balance = 50000;
     }
+
+    //No use los metodos de aca para abajo
     auth(account, password){
         return account === this.account && password === this.password;
     }
-    withdraw(amount){
+    withdrawl(amount){
         if(this.auth(account, password) && amount < this.balance && (amount%10) === 0){
             balance -= amount
             return true;
@@ -22,7 +24,7 @@ class User{
             return false;
         }
     }
-    consign(amount){
+    deposit(amount){
         if(this.auth(account, password)){
             this.balance += amount;
             return true;
