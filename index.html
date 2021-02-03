@@ -1,49 +1,114 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
+<head>
     <style>
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
-      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-      #input:focus { outline: none; }
-      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
-
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages > li { padding: 0.5rem 1rem; }
-      #messages > li:nth-child(odd) { background: #efefef; }
-    </style>
-  </head>
-  <body>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
-    <script src="/socket.io/socket.io.js"></script>
-
-    <script>
-      var socket = io();
-
-      var messages = document.getElementById('messages');
-      var form = document.getElementById('form');
-      var input = document.getElementById('input');
-
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        if (input.value) {
-          //socket.emit('chat message', input.value);
-          socket.emit('chat message', {account:42635212, password:123456, balance:50000});
-          input.value = '';
+        .title {
+            color: white;
+            text-align:center;
         }
-      });
+        .sub-title{
+            color: red;
+            text-align:center;
+        }
+        .account{
+            text-align:center;
+        }
+        .transaction{
+            text-align:center;
+        }
+        .disabled{
+            pointer-events: none;
+            opacity: 0.4;
+        }
+    </style>
+    <title>ATM</title>
+</head>
+<body style="background-color: black">
+    <div class="title">
+        <h1>ATM - Sistemas distribuidos</h1>
+    </div>
+    <div class="sub-title">
+        <h2>Ingrese sus datos</h2>
+    </div>
+    <div class= "account" id="DivAccount" name="DivAccount">
+        <label style="color:white">Cuenta</label><br>
+        <input id="account" name="account" type="text" /> <br><br>
+        <label style="color:white">Password</label><br>
+        <input id="password" name="password" type="password" /> <br><br>
+        <button name="btnauth" id="btnauth">Ingresar</button>
+    </div>
+    <div class="sub-title">
+        <h2>Bienvenido, realice su transacción</h2>
+    </div>
+    <div class="transaction disabled" id="DivTransaction" name="DivTransaction">
+        <label style="color:white">Retiro</label><br>
+        <input id="withdraw" name="withdraw" type="text" /> <br>
+        <button name="btnwithdraw" id="btnwithdraw">Retirar</button><br><br>
+        <label style="color:white">consignación</label><br>
+        <input id="consign" name="consign" type="text" /> <br>
+        <button name="btnconsign" id="btnconsign">Consignar</button><br><br><br>
+        <button name="btncheckBalance" id="btncheckBalance">Ver saldo</button><br><br>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
 
-      socket.on('chat message', function(msg) {
-        var item = document.createElement('li');
-        item.textContent = msg;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
-      });
+        var botonIngresar = document.getElementById('btnauth');
+        var seccionIngresar = document.getElementById('DivAccount');
+        var seccionTransaccion = document.getElementById('DivTransaction');
+        var botonRetirar = document.getElementById('btnwithdraw');
+        var botonConsignar = document.getElementById('btnconsign');
+        var botonSaldo = document.getElementById('btncheckBalance');
+
+        botonIngresar.addEventListener('click',function(e){
+            e.preventDefault();
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
+            socket.emit('auth', {account:account, password:password});
+        });
+
+        socket.on('auth',function(msg){
+            if(msg === "ok"){
+                alert("Bienvenido al ATM")
+                seccionIngresar.classList.add('disabled');
+                seccionTransaccion.classList.remove('disabled');
+            }else{
+                alert("Datos incorrectos")
+            }
+        });
+
+        botonRetirar.addEventListener('click',function(e){
+            e.preventDefault();
+            var montoARetirar = document.getElementById('withdraw').value;
+            socket.emit('withdraw', montoARetirar);
+        });
+
+        socket.on('withdraw', function(msg){
+            if(msg === "ok"){
+                alert("Aquí tiene su dinero");
+            }else{
+                alert("Fondos insuficientes, intente de nuevo");
+            }
+        });
+
+        botonConsignar.addEventListener('click', function(e){
+            e.preventDefault();
+            var montoAconsignar = document.getElementById('consign').value;
+            socket.emit('consign', montoAconsignar);
+        });
+
+        socket.on('consign', function(msg){
+            alert("Consignación exitosa");
+        });
+
+        botonSaldo.addEventListener('click', function(e){
+            e.preventDefault();
+            socket.emit('check');
+        });
+
+        socket.on('check',function(msg){
+            alert(`Su saldo es: ${msg}`);
+        });
     </script>
-  </body>
+</body>
 </html>
