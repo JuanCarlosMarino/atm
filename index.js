@@ -3,26 +3,44 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
 
-const db = require('./user');
+const user = require('./user');
+const client = new user();
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/jorge_login.html');
 });
 
+app.get('/account', (req, res) => {
+  res.sendFile(__dirname + '/jorge_bank.html');
+});
+ 
 io.on('connection', (socket) => {
-  socket.on('chat message', msg => {
-    //io.emit('chat message', msg);
+  socket.on('look', msg => {
+    if(msg.account === client.account && msg.password === client.password){
+      io.emit('look',"ok");
+    }else{
+      io.emit('look',"error");
+    }
+    console.log(msg)    
+  });
+  
+  socket.on('withdrawValue', msg => {
     console.log(msg);
-    
+    if(client.balance > Number(msg)){  
+      client.balance -= Number(msg);
+      io.emit('withdrawValue', "ok");
+    }else{                
+      io.emit('withdrawValue', "error");
+    }
   });
-  socket.on('withdraw', msg => {
-    io.emit('chat message', msg);
+  socket.on('updateBalance', msg => {
+    io.emit('updateBalance', client.balance);
+    console.log(msg);
   });
-  socket.on('check', msg => {
-    io.emit('chat message', msg);
-  });
-  socket.on('consign', msg => {
-    io.emit('chat message', msg);
+  socket.on('consignValue', msg => {
+    console.log(msg);
+    client.balance += Number(msg);
+    io.emit('consignValue', "ok")
   });
 });
 

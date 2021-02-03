@@ -12,21 +12,21 @@
             <h1>Login</h1>
             <div class="input-box">
                 <i class="fa fa-address-card"></i>
-                <input type="username" placeholder="User ID">
+                <input type="username" placeholder="User ID" id="account">
             </div>
             <div class="input-box">
                 <i class="fa fa-key"></i>
-                <input type="password" placeholder="Password" id ="myInput">
+                <input type="password" placeholder="Password" id ="password">
                 <span class="eye" onclick="myFunction()">
                     <i id ="hide1" class="fa fa-eye"></i>
                     <i id ="hide2" class="fa fa-eye-slash"></i>
                 </span>
             </div> 
-            <button type="button" onclick="location.href='jorge_bank.html'" class="login-btn">LOGIN</button>
+            <button name="login-btn" id="login-btn"  class="login-btn">LOGIN</button>
     </div>
             <script>
                 function myFunction(){
-                    var x = document.getElementById("myInput");
+                    var x = document.getElementById("password");
                     var y = document.getElementById("hide1");
                     var z = document.getElementById("hide2");
 
@@ -41,6 +41,26 @@
                         z.style.display = "block";
                     }
                 }
+            </script>
+            <script src="/socket.io/socket.io.js"></script>
+            <script>
+                var socket = io();
+                var loginButton = document.getElementById('login-btn')
+
+                loginButton.addEventListener('click',function(e){
+                    var account = document.getElementById('account').value;
+                    var password = document.getElementById('password').value;
+                    socket.emit('look', {account:account, password:password})
+
+                });
+                socket.on('look',function(msg){
+                    if (msg === "ok") {
+                        alert("Successful Login - ATM")
+                        window.location.href = "/account";
+                    }else{
+                        alert("Error, Username or Password incorrect!")
+                    }
+                });
             </script>
 
     </body>

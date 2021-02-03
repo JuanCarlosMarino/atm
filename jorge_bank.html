@@ -12,32 +12,83 @@
             <h1>ACCOUNT DETAILS</h1>
             <div class="input-box-acc">
                 <i class="fa fa-address-card"></i>
-                <input type="username" placeholder="User ID">
+                <input type="username" placeholder="000361341" disabled>
                 
             </div>
             <div class="input-box-acc">
                 <i class="fa fa-user"></i>
-                <input type="owner" placeholder="  Jorge Onate">
+                <input type="owner" placeholder="  Jorge Onate" disabled> 
             </div>
             <div class="input-box-acc">
                 <i class="fa fa-money"></i>
-                <input type="accountBalance" placeholder="Account Balance">
+                
+                <h4 type="accountBalance" placeholder="Account Balance" id="account-balance" >Balance: </h4>
                 
             </div> 
-            <button type="button" onclick="location.href='jorge_login.html'" class="login-btn">LOGOUT</button>
+            <button type="button" id="checkBalance-btn" class="login-btn">CHECK BALANCE</button>
     </div>
     <div class="acc-box2">
         <h1>TRANSACTION</h1>
             <div class="input-box">
                 <i class="fa fa-dollar"></i>
-                <input type="withdraw" placeholder="Withdraw ">
+                <head>Withdraw: </head>
+                <input type="withdraw" placeholder="0" id="withdraw-value">
             </div>
             <div class="input-box" >
                 <i class="fa fa-dollar"></i>
-                <input type="consign" placeholder="Consign ">
+                <head>Cosign: </head>
+                <input type="consign" placeholder="0" id="consign-value">
             </div>
-            <button type="button" class="login-btn">CONFIRM</button>
+            <button  id= "confirmWith-btn" class="login-btn">CONFIRM WITHDRAW</button>
+            <button  id= "confirmCon-btn" class="login-btn">CONFIRM CONSIGN</button>
     </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        var checkBalance = document.getElementById('checkBalance-btn');
+        var accountBalance = document.getElementById('account-balance');
+        
+        var confirmWithButton = document.getElementById('confirmWith-btn');
+        var confirmConButton = document.getElementById('confirmCon-btn');        
+
+        confirmWithButton.addEventListener('click',function(e){
+            e.preventDefault();
+            var withdrawValue = document.getElementById('withdraw-value').value;
+            
+            socket.emit('withdrawValue', withdrawValue)
+
+        });
+        socket.on('withdrawValue', function(msg){
+            if(msg === "ok"){
+                alert("Successful tranascation");
+            }else{
+                alert("Insuficient funds, please try again");
+            }
+        });
+
+        confirmConButton.addEventListener('click', function(e){
+            e.preventDefault();
+            var cosignValue = document.getElementById('consign-value').value;
+            socket.emit('consignValue', cosignValue);
+        });
+
+        socket.on('consignValue', function(msg){
+            alert("Successful transaction");
+        });
+
+        checkBalance.addEventListener('click', function(e){
+            e.preventDefault();
+            socket.emit('updateBalance')
+
+        });
+        socket.on('updateBalance',function(msg){
+            alert(`Your balance is: ${msg}`);
+            document.getElementById("account-balance").innerHTML = msg;
+        });
+        
+    </script>
             
 
     </body>
