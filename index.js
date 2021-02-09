@@ -20,26 +20,30 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+//fuente implementacion rooms (multiples usuarios): https://es.stackoverflow.com/questions/304403/mostrar-las-rooms-en-socket-io
+
 io.on('connection', (socket) => {
   socket.on('withdraw', msg => {
     const db = recuperarPosicion(msg.account, msg.password);
     console.log(msg);
+    socket.join(msg.account);
     if(db != null ){
       if(users[db].balance > Number(msg.montoARetirar)){  
         users[db].balance -= Number(msg.montoARetirar);
-        io.emit('withdraw', "ok");
+        io.sockets.to(msg.account).emit('withdraw', "ok");
       }
     }else{                
-      io.emit('withdraw', "error");
+      io.sockets.to(msg.account).emit('withdraw', "error");
     }
   });
 
   socket.on('check', msg => {
     const db = recuperarPosicion(msg.account, msg.password);
+    socket.join(msg.account);
     if(db != null){
-      io.emit('check', users[db].balance);
+      io.sockets.to(msg.account).emit('check', users[db].balance);
     }else{
-      io.emit('check', "error");
+      io.sockets.to(msg.account).emit('check', "error");
     }   
     console.log(msg);
   });
@@ -47,11 +51,12 @@ io.on('connection', (socket) => {
   socket.on('consign', msg => {
     const db = recuperarPosicion(msg.account, msg.password);
     console.log(msg);
+    socket.join(msg.account);
     if(db != null){
       users[db].balance += Number(msg.montoAconsignar);
-      io.emit('consign', "ok");
+      io.sockets.to(msg.account).emit('consign', "ok");
     }else{
-      io.emit('consign', "error");
+      io.sockets.to(msg.account).emit('consign', "error");
     }  
   });
 });
