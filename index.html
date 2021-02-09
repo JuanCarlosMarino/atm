@@ -34,13 +34,9 @@
         <label style="color:white">Cuenta</label><br>
         <input id="account" name="account" type="text" /> <br><br>
         <label style="color:white">Password</label><br>
-        <input id="password" name="password" type="password" /> <br><br>
-        <button name="btnauth" id="btnauth">Ingresar</button>
-    </div>
-    <div class="sub-title">
-        <h2>Bienvenido, realice su transacción</h2>
-    </div>
-    <div class="transaction disabled" id="DivTransaction" name="DivTransaction">
+        <input id="password" name="password" type="password" /> <br><br>        
+    </div>    
+    <div class="transaction" id="DivTransaction" name="DivTransaction">
         <label style="color:white">Retiro</label><br>
         <input id="withdraw" name="withdraw" type="text" /> <br>
         <button name="btnwithdraw" id="btnwithdraw">Retirar</button><br><br>
@@ -52,35 +48,17 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-
-        var botonIngresar = document.getElementById('btnauth');
-        var seccionIngresar = document.getElementById('DivAccount');
-        var seccionTransaccion = document.getElementById('DivTransaction');
+        
         var botonRetirar = document.getElementById('btnwithdraw');
         var botonConsignar = document.getElementById('btnconsign');
-        var botonSaldo = document.getElementById('btncheckBalance');
-
-        botonIngresar.addEventListener('click',function(e){
-            e.preventDefault();
-            var account = document.getElementById('account').value;
-            var password = document.getElementById('password').value;
-            socket.emit('auth', {account:account, password:password});
-        });
-
-        socket.on('auth',function(msg){
-            if(msg === "ok"){
-                alert("Bienvenido al ATM")
-                seccionIngresar.classList.add('disabled');
-                seccionTransaccion.classList.remove('disabled');
-            }else{
-                alert("Datos incorrectos")
-            }
-        });
+        var botonSaldo = document.getElementById('btncheckBalance');        
 
         botonRetirar.addEventListener('click',function(e){
             e.preventDefault();
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
             var montoARetirar = document.getElementById('withdraw').value;
-            socket.emit('withdraw', montoARetirar);
+            socket.emit('withdraw', {account:account, password:password, montoARetirar:montoARetirar});
         });
 
         socket.on('withdraw', function(msg){
@@ -94,20 +72,32 @@
         botonConsignar.addEventListener('click', function(e){
             e.preventDefault();
             var montoAconsignar = document.getElementById('consign').value;
-            socket.emit('consign', montoAconsignar);
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
+            socket.emit('consign', {account:account, password:password, montoAconsignar:montoAconsignar});
         });
 
         socket.on('consign', function(msg){
-            alert("Consignación exitosa");
+            if(msg != "error"){
+                alert("Consignación exitosa");
+            }else{
+                alert('Datos incorrectos!')
+            }             
         });
 
         botonSaldo.addEventListener('click', function(e){
             e.preventDefault();
-            socket.emit('check');
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
+            socket.emit('check', {account:account, password:password});
         });
 
         socket.on('check',function(msg){
-            alert(`Su saldo es: ${msg}`);
+            if(msg != "error"){
+                alert(`Su saldo es: ${msg}`);
+            }else{
+                alert('Datos incorrectos!')
+            }            
         });
     </script>
 </body>

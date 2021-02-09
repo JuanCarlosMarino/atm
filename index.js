@@ -4,41 +4,58 @@ const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
 
 const user = require('./user');
-const db = new user();
+var users = [new user("000362377","123456",50000),new user("000362378","123456",50000),new user("000362379","123456",50000),new user("000362370","123456",50000)];
+
+function recuperarPosicion (account,password){
+  var posicion = null;
+  for(let i=0;i<users.length;i++){
+    if(users[i].account === account && users[i].password === password){
+      posicion = i;
+    }
+  }
+  return posicion;
+}
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 io.on('connection', (socket) => {
-  socket.on('auth', msg => {
-    if(msg.password === db.password && msg.account === db.account){
-      io.emit('auth',"ok");
-    }else{
-      io.emit('auth',"error");
-    }
-    console.log(msg)    
-  });
-
   socket.on('withdraw', msg => {
+    const db = recuperarPosicion(msg.account, msg.password);
     console.log(msg);
-    if(db.balance > Number(msg)){  
-      db.balance -= Number(msg);
-      io.emit('withdraw', "ok");
+    if(db != null ){
+      if(users[db].balance > Number(msg.montoARetirar)){  
+        users[db].balance -= Number(msg.montoARetirar);
+        io.emit('withdraw', "ok");
+      }
     }else{                
       io.emit('withdraw', "error");
     }
+    io.close();
   });
 
   socket.on('check', msg => {
-    io.emit('check', db.balance);
+    const db = recuperarPosicion(msg.account, msg.password);
+    if(db != null){
+      io.emit('check', users[db].balance);
+    }else{
+      io.emit('check', "error");
+    }   
     console.log(msg);
+    io.close();
   });
 
   socket.on('consign', msg => {
+    const db = recuperarPosicion(msg.account, msg.password);
     console.log(msg);
-    db.balance += Number(msg);
-    io.emit('consign', "ok")
+    if(db != null){
+      users[db].balance += Number(msg.montoAconsignar);
+      io.emit('consign', "ok");
+    }else{
+      io.emit('consign', "error");
+    }
+    io.close();    
   });
 });
 
