@@ -32,7 +32,6 @@ io.on('connection', (socket) => {
     }else{                
       io.emit('withdraw', "error");
     }
-    io.close();
   });
 
   socket.on('check', msg => {
@@ -43,7 +42,6 @@ io.on('connection', (socket) => {
       io.emit('check', "error");
     }   
     console.log(msg);
-    io.close();
   });
 
   socket.on('consign', msg => {
@@ -54,8 +52,7 @@ io.on('connection', (socket) => {
       io.emit('consign', "ok");
     }else{
       io.emit('consign', "error");
-    }
-    io.close();    
+    }  
   });
 });
 

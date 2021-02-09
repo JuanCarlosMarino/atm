@@ -47,7 +47,9 @@
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
+        var socket = io.connect('http://localhost:3000',{
+            forceNew:true,
+        });
         
         var botonRetirar = document.getElementById('btnwithdraw');
         var botonConsignar = document.getElementById('btnconsign');
@@ -67,6 +69,8 @@
             }else{
                 alert("Fondos insuficientes, intente de nuevo");
             }
+            socket.close();
+            location.reload();
         });
 
         botonConsignar.addEventListener('click', function(e){
@@ -82,7 +86,9 @@
                 alert("Consignación exitosa");
             }else{
                 alert('Datos incorrectos!')
-            }             
+            }
+            socket.close();
+            location.reload();             
         });
 
         botonSaldo.addEventListener('click', function(e){
@@ -97,7 +103,9 @@
                 alert(`Su saldo es: ${msg}`);
             }else{
                 alert('Datos incorrectos!')
-            }            
+            }
+            socket.close();
+            location.reload();        
         });
     </script>
 </body>
