@@ -4,43 +4,59 @@ const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
 
 const user = require('./user');
-const client = new user();
+const clients = [new user("000361341", "1234", 15000), new user("000361342", "1234", 12500),
+ new user("000361343", "1234", 10000), new user("000361344", "1234", 19500)];
+
+function clientsAccount(account, password) {
+  var client_account = null;
+  for (let i = 0; i < clients.length; i++) {
+    if (clients[i].account === account && clients[i].password === password) {
+      client_account = i;
+    }
+  }
+  return client_account;
+}
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/jorge_login.html');
-});
-
-app.get('/account', (req, res) => {
   res.sendFile(__dirname + '/jorge_bank.html');
 });
- 
+
 io.on('connection', (socket) => {
-  socket.on('look', msg => {
-    if(msg.account === client.account && msg.password === client.password){
-      io.emit('look',"ok");
-    }else{
-      io.emit('look',"error");
-    }
-    console.log(msg)    
-  });
-  
   socket.on('withdrawValue', msg => {
+    const value = clientsAccount(msg.account,msg.password);
     console.log(msg);
-    if(client.balance > Number(msg)){  
-      client.balance -= Number(msg);
-      io.emit('withdrawValue', "ok");
-    }else{                
-      io.emit('withdrawValue', "error");
+    socket.join(msg.account);
+    if (value != null) {
+      if (clients[value].balance > Number(msg.withdrawValue)) {
+        clients[value].balance = clients[value].balance- Number(msg.withdrawValue);
+        io.sockets.to(msg.account).emit('withdrawValue', "ok");
+      }
+    } else {
+      io.sockets.to(msg.account).emit('withdrawValue', "error");
     }
   });
+
   socket.on('updateBalance', msg => {
-    io.emit('updateBalance', client.balance);
-    console.log(msg);
+    const value = clientsAccount(msg.account,msg.password);
+    socket.join(msg.account);    
+    if (value !=null) {
+      io.sockets.to(msg.account).emit ('updateBalance',clients[value].balance)
+    }else{
+      io.sockets.to(msg.account).emit('updateBalance', "error");
+    }
+    console.log(msg);    
   });
+
   socket.on('consignValue', msg => {
+    const value = clientsAccount(msg.account,msg.password);    
+    socket.join(msg.account);   
+    if(value != null){      
+      clients[value].balance +=  Number(msg.consignValue);      
+      io.sockets.to(msg.account).emit('consignValue', "ok");
+    }else {
+      io.sockets.to(msg.account).emit('consignValue',"error");
+    }
     console.log(msg);
-    client.balance += Number(msg);
-    io.emit('consignValue', "ok")
   });
 });
 

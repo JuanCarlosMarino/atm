@@ -1,96 +1,270 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>ATM-ACCOUNT</title>
-        <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+
+<head>
+    <title>ATM-BANK</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
         ">
-    
-    </head>
-    <body class="backgroundACC">
-    <div class="acc-box1">
-            <h1>ACCOUNT DETAILS</h1>
-            <div class="input-box-acc">
-                <i class="fa fa-address-card"></i>
-                <input type="username" placeholder="000361341" disabled>
-                
-            </div>
-            <div class="input-box-acc">
-                <i class="fa fa-user"></i>
-                <input type="owner" placeholder="  Jorge Onate" disabled> 
-            </div>
-            <div class="input-box-acc">
-                <i class="fa fa-money"></i>
-                
-                <h4 type="accountBalance" placeholder="Account Balance" id="account-balance" >Balance: </h4>
-                
-            </div> 
-            <button type="button" id="checkBalance-btn" class="login-btn">CHECK BALANCE</button>
+    <style>
+        * {
+            margin: 50;
+            padding: 20;
+        }
+
+        body {
+            background-size: cover;
+            background-position: center;
+            font-family: sans-serif;
+        }
+
+        .backgroundACC {
+            background: linear-gradient(90deg, rgba(45, 254, 255, 1) 0%, rgba(0, 31, 150, 1) 100%);
+            background-size: cover;
+            background-position: center;
+            font-family: sans-serif;
+        }
+
+        .form-box {
+            width: 500px;
+            background-color: rgba(0, 0, 0, 0.8);
+            margin: 0% auto;
+            margin-left: 0;
+            padding: 50px 0;
+            color: #fff;
+            box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .acc-box1 {
+            float: left;
+            width: 350px;
+            height: 390px;
+            background-color: rgba(0, 0, 0, 0.8);
+            margin-top: 100px;
+            margin-bottom: 100px;
+            margin-right: 150px;
+            margin-left: 80px;
+            padding: 25px;
+            color: #fff;
+            box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .acc-box2 {
+            float: left;
+            text-align: center;
+            width: 390px;
+            height: 390px;
+            background: linear-gradient(90deg, rgba(0, 31, 150, 1) 0%, rgba(45, 254, 255, 1) 100%);
+            margin-top: 100px;
+            margin-bottom: 100px;
+            margin-right: 150px;
+            margin-left: 5px;
+            padding: 60px;
+            color: #fff;
+            box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .input-box {
+            margin: 31px auto;
+            width: 80%;
+            border-bottom: 1px solid #fff;
+            padding-top: 10px;
+            padding-bottom: 5px;
+        }
+
+        .input-box input {
+            width: 90%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+        }
+
+        .input-box-acc {
+            margin: 20px auto;
+            width: 80%;
+            border-bottom: 1px solid #fff;
+            padding-top: 5 px;
+            padding-bottom: 5px;
+        }
+
+        .input-box-acc input {
+            width: 80%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #fff;
+        }
+
+        ::placeholder {
+            color: #ccc;
+        }
+
+        .fa {
+            margin-right: 10px;
+        }
+
+        .eye {
+            position: absolute;
+        }
+
+        #hide1 {
+            display: none;
+        }
+
+        .login-btn {
+            margin: 40px auto 20px;
+            width: 80%;
+            display: block;
+            outline: none;
+            padding: 10px 0;
+            border: 1px solid #fff;
+            cursor: pointer;
+            background: transparent;
+            color: white;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body class="backgroundACC">
+    <div class="acc-box2">
+        <h1>LOGIN</h1>
+        <div class="input-box">
+            <i class="fa fa-address-card"></i>
+
+            <head>Username: </head>
+            <input type="username" placeholder="e.g. 000321548" id="account">
+        </div>
+        <div class="input-box">
+            <i class="fa fa-key"></i>
+
+            <head>Password: </head>
+            <input type="password" placeholder="e.g. 4dsb66dks" id="password">
+            <span class="eye" onclick="myFunction()">
+                <i id="hide1" class="fa fa-eye"></i>
+                <i id="hide2" class="fa fa-eye-slash"></i>
+            </span>
+        </div>
+        <button type="button" id="checkBalance-btn" class="login-btn">CHECK BALANCE</button>
+        <div class="input-box-acc">
+            <i class="fa fa-dollar"></i>
+
+            <head>Balance: </head>
+            <h4 type="accountBalance" >
+                <div id="account-balance"></div>
+            </h4>
+        </div>
     </div>
+
     <div class="acc-box2">
         <h1>TRANSACTION</h1>
-            <div class="input-box">
-                <i class="fa fa-dollar"></i>
-                <head>Withdraw: </head>
-                <input type="withdraw" placeholder="0" id="withdraw-value">
-            </div>
-            <div class="input-box" >
-                <i class="fa fa-dollar"></i>
-                <head>Cosign: </head>
-                <input type="consign" placeholder="0" id="consign-value">
-            </div>
-            <button  id= "confirmWith-btn" class="login-btn">CONFIRM WITHDRAW</button>
-            <button  id= "confirmCon-btn" class="login-btn">CONFIRM CONSIGN</button>
+        <div class="input-box">
+            <i class="fa fa-dollar"></i>
+
+            <head>Withdraw: </head>
+            <input type="withdraw" placeholder="0" id="withdraw-value">
+        </div>
+        <button id="confirmWith-btn" class="login-btn">CONFIRM WITHDRAW</button>
+        <div class="input-box">
+            <i class="fa fa-dollar"></i>
+
+            <head>Cosign: </head>
+            <input type="consign" placeholder="0" id="consign-value">
+        </div>
+
+        <button id="confirmCon-btn" class="login-btn">CONFIRM CONSIGN</button>
     </div>
+    <script>
+        function myFunction() {
+            var x = document.getElementById("password");
+            var y = document.getElementById("hide1");
+            var z = document.getElementById("hide2");
+
+            if (x.type == 'password') {
+                x.type = "text";
+                y.style.display = "block";
+                z.style.display = "none";
+            }
+            else {
+                x.type = "password";
+                y.style.display = "none";
+                z.style.display = "block";
+            }
+        }
+    </script>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
+        var socket = io.connect('http://localhost:3000', {
+            forceNew: true,
+        });
+
+        var accountBalance = document.getElementById('account-balance');
 
         var checkBalance = document.getElementById('checkBalance-btn');
-        var accountBalance = document.getElementById('account-balance');
-        
         var confirmWithButton = document.getElementById('confirmWith-btn');
-        var confirmConButton = document.getElementById('confirmCon-btn');        
+        var confirmConButton = document.getElementById('confirmCon-btn');
 
-        confirmWithButton.addEventListener('click',function(e){
+        confirmWithButton.addEventListener('click', function (e) {
             e.preventDefault();
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
             var withdrawValue = document.getElementById('withdraw-value').value;
-            
-            socket.emit('withdrawValue', withdrawValue)
+
+            socket.emit('withdrawValue', {account:account, password:password, withdrawValue:withdrawValue });
 
         });
-        socket.on('withdrawValue', function(msg){
-            if(msg === "ok"){
+        socket.on('withdrawValue', function (msg) {
+            if (msg === "ok") {
                 alert("Successful tranascation");
-            }else{
+            } else {
                 alert("Insuficient funds, please try again");
             }
+            socket.close();
+            location.reload();
         });
 
-        confirmConButton.addEventListener('click', function(e){
+        confirmConButton.addEventListener('click', function (e) {
             e.preventDefault();
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
             var cosignValue = document.getElementById('consign-value').value;
-            socket.emit('consignValue', cosignValue);
+            socket.emit('consignValue', { account: account, password: password, cosignValue: cosignValue });
         });
 
-        socket.on('consignValue', function(msg){
-            alert("Successful transaction");
+        socket.on('consignValue', function (msg) {
+            if (msg === "ok") {
+                alert("Successful transaction");
+            } else {
+                alert('Error, account details wrong!')
+            }
+            socket.close();
+            location.reload();
         });
 
-        checkBalance.addEventListener('click', function(e){
+        checkBalance.addEventListener('click', function (e) {
             e.preventDefault();
-            socket.emit('updateBalance')
+            var account = document.getElementById('account').value;
+            var password = document.getElementById('password').value;
+            socket.emit('updateBalance', { account: account, password: password });
 
         });
-        socket.on('updateBalance',function(msg){
-            alert(`Your balance is: ${msg}`);
-            document.getElementById("account-balance").innerHTML = msg;
+        socket.on('updateBalance', function (msg) {
+            if (msg != "error") {
+                alert(`Your balance is: ${msg}`);
+                document.getElementById("account-balance").innerHTML = msg;
+            }else{
+                alert('Error, account details wrong!')
+            }
+            socket.close();
+            location.reload();
         });
-        
+
     </script>
-            
-
-    </body>
-
+</body>
 </html>
