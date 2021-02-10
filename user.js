@@ -1,8 +1,8 @@
 class User{
-    constructor(){
-        this.account = "567890123456";
-        this.password = "8520";
-        this.balance = 50000;
+    constructor(account, password, balance){
+        this.account = account;
+        this.password = password;
+        this.balance = balance;
     }
 
     //No use los metodos de aca para abajo

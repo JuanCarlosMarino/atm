@@ -6,7 +6,18 @@ const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
 
 const user = require('./user');
-const db = new user();
+var users = [new user("000243974","123456",50000),new user("000243975","123456",50000),new user("000243976","123456",50000),new user("000243977","123456",50000)];
+
+function getUserData (account,password){
+  var index = null;
+  for(let i=0;i<users.length;i++){
+    if(users[i].account === account && users[i].password === password){
+      index = i;
+    }
+  }
+  return index;
+}
+
 
 app.use(express.static(__dirname + '/public'));
 
@@ -31,36 +42,62 @@ app.get('/withdrawl', (req, res) => {
 });
 
 io.on('connection', (socket) => {
+
   socket.on('pin_check', msg => {
     //io.emit('chat message', msg);
-    if(msg.account === db.account && msg.password === db.password){
-      io.emit('pin_check', "ok");
+    const db = getUserData(msg.account, msg.password);
+    socket.join(msg.account);
+    if(db!=null){       
+      io.sockets.to(msg.account).emit('pin_check', "ok");
     }
     else{
-      io.emit('pin_check', "error");
+      io.sockets.to(msg.account).emit('pin_check', "error");
     }
     console.log(msg);
     
   });
   socket.on('get_balance', msg => {
-    io.emit('get_balance', db.balance);
+    const db = getUserData(msg.account, msg.password);
+    socket.join(msg.account);
+    if(db!=null){      
+      io.sockets.to(msg.account).emit('get_balance', db.balance);
+    }
+    else{
+      io.sockets.to(msg.account).emit('get_balance', "error");
+    }
     console.log(msg);
   });
 
   socket.on('deposit', msg => {
+    const db = getUserData(msg.account, msg.password);
+    socket.join(msg.account);
+    if(db!=null){       
+      db.balance += Number(msg.deposit_value);
+      io.sockets.to(msg.account).emit('deposit', "ok");
+    }
+    else{
+      io.sockets.to(msg.account).emit('deposit', "error");
+    }
     console.log(msg);
-    db.balance += Number(msg);
+
   });
 
   socket.on('withdrawl', msg => {
     console.log(msg);
-    if(db.balance < Number(msg)){
-      io.emit('withdrawl', "error");
-    }else{
-      db.balance -= Number(msg);
-      io.emit('withdrawl', "ok");
+    const db = getUserData(msg.account, msg.password);
+    socket.join(msg.account);
+    if(db!=null){ 
+      if(db.balance < Number(msg.value)){
+        io.sockets.to(msg.account).emit('withdrawl', "error");
+      }else{
+        db.balance -= Number(msg.value);
+        io.sockets.to(msg.account).emit('withdrawl', "ok");
+      }
+    } 
+    else{
+      io.sockets.to(msg.account).emit('withdrawl', "error");
     }
-    
+
   });
 
 });

@@ -75,8 +75,11 @@
 
 
             <div class="col-xs-4">
-              <div style="margin-top:8rem;">
+              <div style="margin-top:8rem; margin-bottom: 5rem;">
                 <img src="img/CardInsertedGreenLight.png" style="width:16em;"/>
+                <h1 class="demo-section-title text-uppercase text-center">Account</h1>
+                <input type="text" id="userAccountInput" class="form-control"/>
+              <!-- TABLE -->
               </div>
             </div><!-- /.col-xs-4 -->
 
@@ -124,14 +127,17 @@
       function deleteInput(){
         console.log("canceeel");
         document.getElementById("userPinInput").value = "";
+        document.getElementById("userAccountInput").value = "";
       }
 
 
     </script>
 <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io();
-    //sessionStorage.setItem("socket", socket);
+        var socket = io.connect('http://localhost:3000',{
+            forceNew:true,
+        });
+    //
     
     var confirmBtn = document.getElementById('confirmButton');
     //var input = document.getElementById('input');
@@ -140,8 +146,13 @@
       e.preventDefault();
       //if (pin) {
         //socket.emit('chat message', input.value);
-        var pin = document.getElementById("userPinInput").value
-        socket.emit('pin_check', {account:"567890123456", password:pin});
+        var pin = document.getElementById("userPinInput").value;
+        var account = document.getElementById("userAccountInput").value;
+        var userData = {account:account, password:pin}
+        //sessionStorage.setItem("userData", userData);
+        localStorage.setItem("userData", userData);
+
+        socket.emit('pin_check', userData);
         //input.value = '';
         //redireccionar
       //}

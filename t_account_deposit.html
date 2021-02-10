@@ -96,9 +96,13 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
 
-      var socket = io();
+      var socket = io.connect('http://localhost:3000',{
+            forceNew:true,
+        });
       //var socket = sessionStorage.getItem('socket');
-      socket.emit('get_balance', "get_balance");
+      var userData = localStorage.getItem("userData");
+      console.log("userData");
+      socket.emit('get_balance', userData);
 
       socket.on('get_balance', function(msg) {
         console.log(msg);
@@ -106,6 +110,7 @@
     });
 
     </script>
+  
     
     <script>
       document.getElementById("deposit_cash").addEventListener("click", function(){window.location.href = "/deposit_cash";});
